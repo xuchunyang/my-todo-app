@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "dev": "ls *.js views/*.pug | DEBUG=app entr -r node app.js"
+    "dev": "ls *.js views/*.pug | DEBUG=app entr -r node app.js",
+    "start": "node app.js"
   },
   "jest": {
     "testEnvironment": "node"
