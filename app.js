@@ -9,6 +9,8 @@ const { addTodo, getTodos, deleteTodo, doneTodo } = require("./todo.js");
 
 const app = express();
 
+app.disable("x-powered-by");
+
 app.use(morgan("dev"));
 app.use(express.json());
 
