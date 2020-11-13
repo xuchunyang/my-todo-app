@@ -10,10 +10,19 @@ html
 
     if user
       p Welcome #{user}! <a href="/logout">Logout</a>.
-      p You have #{todos.length} todos.
+      p You have #{todos.length} total todos.
+      h2 Todo
       ul
-        for todo in todos
+        for todo in todos.filter(todo => !todo.done)
+          li #{todo.content} <a href="/todo/done?id=#{todo.id}">Done</a> <a href="/todo/delete?id=#{todo.id}">Delete</a>
+        else
+          li You don't have any todo!
+      h2 Done
+      ul
+        for todo in todos.filter(todo => todo.done)
           li #{todo.content} <a href="/todo/delete?id=#{todo.id}">Delete</a>
+        else
+          li You have not completed any task
       h2 Add todo
       form(action="/todo/add" method="get")
         p

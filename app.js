@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const pug = require("pug");
 const cookieSession = require("cookie-session");
 const { addUser, verifyUser } = require("./user.js");
-const { addTodo, getTodos, deleteTodo } = require("./todo.js");
+const { addTodo, getTodos, deleteTodo, doneTodo } = require("./todo.js");
 
 const app = express();
 
@@ -66,6 +66,24 @@ app.get("/todo/delete", (req, res) => {
   debug("%s wants to delete todo #%d", user, id);
   // handle exception?
   deleteTodo(user, id);
+  res.redirect("/");
+});
+
+app.get("/todo/done", (req, res) => {
+  const user = req.session.user;
+  if (!user) {
+    debug("invalid access");
+    res.status(401).end();
+    return;
+  }
+  const { id } = req.query;
+  if (!id) {
+    res.status(400).send("Missing id");
+    return;
+  }
+  debug("%s wants to mark done todo #%d", user, id);
+  // handle exception?
+  doneTodo(user, id);
   res.redirect("/");
 });
 
