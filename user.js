@@ -12,4 +12,12 @@ function addUser(username, password) {
   users[username] = password;
 }
 
-module.exports = { addUser };
+function verifyUser(username, password) {
+  if (username in users && users[username] === password) {
+    return;
+  } else {
+    throw new Error("Wrong username/password");
+  }
+}
+
+module.exports = { addUser, verifyUser };

@@ -52,3 +52,14 @@ test("can signup with new username", () => {
       expect(resp.status).toBe(200);
     });
 });
+
+test("can login with correct username/password", () => {
+  return axios
+    .post(ENDPOINT + "/api/user/login", {
+      username: "user",
+      password: "pass",
+    })
+    .then((response) => {
+      expect(response.status).toBe(200);
+    });
+});
