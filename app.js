@@ -54,7 +54,7 @@ app.get("/logout", (req, res) => {
   res.redirect(302, "/");
 });
 
-app.get("/todo/delete", (req, res) => {
+app.get("/todo/delete", (req, res, next) => {
   const user = req.session.user;
   if (!user) {
     debug("invalid access");
@@ -67,12 +67,14 @@ app.get("/todo/delete", (req, res) => {
     return;
   }
   debug("%s wants to delete todo #%d", user, id);
-  // handle exception?
-  deleteTodo(user, id);
-  res.redirect("/");
+  deleteTodo(user, id)
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch(next);
 });
 
-app.get("/todo/done", (req, res) => {
+app.get("/todo/done", (req, res, next) => {
   const user = req.session.user;
   if (!user) {
     debug("invalid access");
@@ -86,11 +88,14 @@ app.get("/todo/done", (req, res) => {
   }
   debug("%s wants to mark done todo #%d", user, id);
   // handle exception?
-  doneTodo(user, id);
-  res.redirect("/");
+  doneTodo(user, id)
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch(next);
 });
 
-app.get("/todo/add", (req, res) => {
+app.get("/todo/add", (req, res, next) => {
   const user = req.session.user;
   if (!user) {
     debug("invalid access");
@@ -102,19 +107,28 @@ app.get("/todo/add", (req, res) => {
     res.status(400).send("Can't add todo, you didn't provide its content");
     return;
   }
-  const todo = addTodo(user, content);
-  debug("todo added: %o", todo);
-  res.redirect("/");
+  addTodo(user, content)
+    .then(() => {
+      debug("%s added todo %s", user, content);
+      res.redirect("/");
+    })
+    .catch(next);
 });
 
 const renderIndex = pug.compileFile("views/index.pug");
-app.get("/", (req, res) => {
+app.get("/", (req, res, next) => {
   const data = {};
   const { user, loginError, signupError } = req.session;
   Object.assign(data, { user, loginError, signupError });
   if (user) {
-    data.todos = getTodos(user);
-    debug("%s has %d todos", user, data.todos.length);
+    getTodos(user)
+      .then((todos) => {
+        data.todos = todos;
+        debug("%s has %d todos", user, data.todos.length);
+        res.send(renderIndex(data));
+      })
+      .catch(next);
+    return;
   }
   res.send(renderIndex(data));
 });

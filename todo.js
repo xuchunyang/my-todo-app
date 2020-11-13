@@ -1,4 +1,5 @@
-const debug = require("debug")("app");
+const debug = require("debug")("app:todo");
+const DB = require("./db.js");
 const todos = [
   {
     user: "user",
@@ -8,40 +9,35 @@ const todos = [
   },
 ];
 
-function addTodo(user, content) {
-  const todo = { user, content, done: false, id: todos.length };
-  todos.push(todo);
-  return todo;
+async function addTodo(user, content) {
+  await DB.run(`INSERT INTO todos (username, content, done) VALUES (?, ?, ?)`, [
+    user,
+    content,
+    false,
+  ]);
 }
 
-function deleteTodo(user, id) {
-  id = parseInt(id);
-  const index = todos.findIndex((todo) => todo.id === id);
-  if (index === -1) throw new Error("No such todo id");
-  const todo = todos[index];
-  if (todo.user !== user) {
+async function deleteTodo(user, id) {
+  const todo = await DB.get("SELECT * FROM todos WHERE id = ?", [id]);
+  if (!todo) throw new Error("No such todo id");
+  if (todo.username !== user) {
     debug("user %s can not delete other's todo %o", user, todo);
     throw new Error("You are not the owner of the todo");
   }
+  await DB.run("DELETE FROM todos WHERE id = ?", [id]);
   debug("todo %o deleted", todo);
-  todos.splice(index, 1);
 }
 
-function doneTodo(user, id) {
-  id = parseInt(id);
-  const index = todos.findIndex((todo) => todo.id === id);
-  if (index === -1) throw new Error("No such todo id");
-  const todo = todos[index];
-  if (todo.user !== user) {
-    debug("user %s can not delete other's todo %o", user, todo);
-    throw new Error("You are not the owner of the todo");
-  }
-  debug("done todo %o", todo);
-  todo.done = true;
+async function doneTodo(user, id) {
+  await DB.run("UPDATE todos SET done = true where id = ? AND username = ?", [
+    id,
+    user,
+  ]);
+  debug("%s mark todo #%d as done", user, id);
 }
 
-function getTodos(user) {
-  return todos.filter((todo) => todo.user === user);
+async function getTodos(user) {
+  return await DB.all(`SELECT * FROM todos WHERE username = ?`, [user]);
 }
 
 module.exports = { addTodo, getTodos, deleteTodo, doneTodo };
