@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const pug = require("pug");
 const cookieSession = require("cookie-session");
 const { addUser, verifyUser } = require("./user.js");
+const { addTodo, getTodos } = require("./todo.js");
 
 const app = express();
 
@@ -50,10 +51,33 @@ app.get("/logout", (req, res) => {
   res.redirect(302, "/");
 });
 
+app.get("/todo/add", (req, res) => {
+  const user = req.session.user;
+  if (!user) {
+    debug("invalid access");
+    res.status(401).end();
+    return;
+  }
+  const { content } = req.query;
+  if (!content) {
+    res.status(400).send("Can't add todo, you didn't provide its content");
+    return;
+  }
+  const todo = addTodo(user, content);
+  debug("todo added: %o", todo);
+  res.redirect("/");
+});
+
 const renderIndex = pug.compileFile("views/index.pug");
 app.get("/", (req, res) => {
+  const data = {};
   const { user, loginError, signupError } = req.session;
-  res.send(renderIndex({ user, loginError, signupError }));
+  Object.assign(data, { user, loginError, signupError });
+  if (user) {
+    data.todos = getTodos(user);
+    debug("%s has %d todos", user, data.todos.length);
+  }
+  res.send(renderIndex(data));
 });
 
 app.use(express.static("public"));

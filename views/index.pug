@@ -10,6 +10,16 @@ html
 
     if user
       p Welcome #{user}! <a href="/logout">Logout</a>.
+      p You have #{todos.length} todos.
+      ul
+        for item in todos
+          li #{item.content}
+      h2 Add todo
+      form(action="/todo/add" method="get")
+        p
+          label(for="todo") Enter todo:
+          input#todo(name="content" type="text" required)
+          button Add
     else
       h2 Login
       form(action="/login" method="get")
