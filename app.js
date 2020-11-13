@@ -56,6 +56,8 @@ app.get("/", (req, res) => {
   res.send(renderIndex({ user, loginError, signupError }));
 });
 
+app.use(express.static("public"));
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/`);
