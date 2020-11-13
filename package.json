@@ -1,0 +1,12 @@
+{
+  "name": "my-todo-app",
+  "version": "1.0.0",
+  "description": "todo app",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "xcy",
+  "license": "ISC"
+}
