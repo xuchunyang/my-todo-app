@@ -4,15 +4,20 @@
   "description": "todo app",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ls *.js | entr -r node app.js"
+    "test": "jest",
+    "dev": "ls *.js | DEBUG=app entr -r node app.js"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "keywords": [],
   "author": "xcy",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
     "debug": "^4.2.0",
     "express": "^4.17.1",
+    "jest": "^26.6.3",
     "morgan": "^1.10.0"
   }
 }
