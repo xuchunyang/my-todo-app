@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "dev": "ls *.js | DEBUG=app entr -r node app.js"
+    "dev": "ls *.js views/*.pug | DEBUG=app entr -r node app.js"
   },
   "jest": {
     "testEnvironment": "node"
@@ -15,9 +15,12 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.0",
+    "cookie-session": "^1.4.0",
     "debug": "^4.2.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jest": "^26.6.3",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "pug": "^3.0.0"
   }
 }
