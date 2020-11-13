@@ -4,9 +4,15 @@
   "description": "todo app",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ls *.js | entr -r node app.js"
   },
   "keywords": [],
   "author": "xcy",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^4.2.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  }
 }
