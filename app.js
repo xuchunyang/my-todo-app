@@ -18,32 +18,35 @@ app.use(
   })
 );
 
-app.get("/signup", (req, res) => {
+app.get("/signup", (req, res, next) => {
   const { username, password } = req.query;
-  try {
-    addUser(username, password);
-    req.session.user = username;
-    res.redirect(302, "/");
-    debug("created user %s", username);
-  } catch (e) {
-    req.session.signupError = e.message;
-    res.redirect(302, "/");
-    debug("created user failed: %s", e.message);
-  }
+  addUser(username, password)
+    .then(() => {
+      req.session.user = username;
+      res.redirect(302, "/");
+      debug("created user %s", username);
+    })
+    .catch((e) => {
+      req.session.signupError = e.message;
+      res.redirect(302, "/");
+      debug(e);
+      debug("created user failed: %s", e.message);
+    });
 });
 
-app.get("/login", (req, res) => {
+app.get("/login", (req, res, next) => {
   const { username, password } = req.query;
-  try {
-    verifyUser(username, password);
-    req.session.user = username;
-    res.redirect(302, "/");
-    debug("%s login successfully", username);
-  } catch (e) {
-    req.session.loginError = e.message;
-    res.redirect(302, "/");
-    debug("%s login failed: %s", username, e.message);
-  }
+  verifyUser(username, password)
+    .then(() => {
+      req.session.user = username;
+      res.redirect(302, "/");
+      debug("%s login successfully", username);
+    })
+    .catch((e) => {
+      req.session.loginError = e.message;
+      res.redirect(302, "/");
+      debug("%s login failed: %s", username, e.message);
+    });
 });
 
 app.get("/logout", (req, res) => {
