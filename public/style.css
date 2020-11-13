@@ -5,6 +5,10 @@ body {
   line-height: 1.5;
 }
 
+main {
+  margin: 0 1em;
+}
+
 h1 {
   text-align: center;
 }
