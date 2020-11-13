@@ -5,7 +5,7 @@ RUN npm install --global pm2
 
 WORKDIR /app
 
-COPY ["package.json", "package-lock.json*", "./"]
+COPY package.json .
 
 RUN npm install
 
