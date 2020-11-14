@@ -12,8 +12,18 @@ const app = express();
 app.disable("x-powered-by");
 
 app.use(morgan("dev"));
-app.use(express.json());                        // for parsing application/json
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+app.use((req, res, next) => {
+  debug("Checking cross-site, Sec-Fetch-Site: %s", req.get("Sec-Fetch-Site"));
+  if (req.get("Sec-Fetch-Site") === "cross-site") {
+    res.status(400).send("Ignore all cross site request");
+    return;
+  }
+  next();
+});
+
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use(
   cookieSession({
