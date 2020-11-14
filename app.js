@@ -22,6 +22,16 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  const referer = req.get("referer");
+  debug("Checking referer, referer: %s", referer);
+  if (referer && !(referer.includes("localhost") || referer.includes("xuchunyang"))) {
+    res.status(400).send(`Ignore unknown referer request: ${referer}`);
+    return;
+  }
+  next();
+});
+
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
