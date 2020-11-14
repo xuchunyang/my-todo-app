@@ -23,6 +23,11 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+  if (req.path === "/") {
+    debug("Don't check referer for /");
+    next();
+    return;
+  }
   const referer = req.get("referer");
   debug("Checking referer, referer: %s", referer);
   if (
