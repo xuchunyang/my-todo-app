@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(
   cookieSession({
     secret: process.env.COOKIE_SECRET,
+    sameSite: "strict",
   })
 );
 
