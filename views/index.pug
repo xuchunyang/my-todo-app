@@ -25,14 +25,14 @@ html
           else
             li You have not completed any task
         h2 Add todo
-        form(action="/todo/add" method="get")
+        form(action="/todo/add" method="post")
           p
             label(for="todo") Enter todo:
             input#todo(name="content" type="text" required)
             button Add
       else
         h2 Login
-        form(action="/login" method="get")
+        form(action="/login" method="post")
           p
             label(for="login-username") Username:
             input#login-username(name="username" type="text" autocomplete="username" required="")
@@ -44,7 +44,7 @@ html
           if loginError
             p= loginError
         h2 Signup
-        form(action="/signup" method="get")
+        form(action="/signup" method="post")
           p
             label(for="username") Username:
             input#username(name="username" type="text" autocomplete="username" required="")

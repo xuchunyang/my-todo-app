@@ -12,7 +12,8 @@ const app = express();
 app.disable("x-powered-by");
 
 app.use(morgan("dev"));
-app.use(express.json());
+app.use(express.json());                        // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.use(
   cookieSession({
@@ -21,8 +22,8 @@ app.use(
   })
 );
 
-app.get("/signup", (req, res, next) => {
-  const { username, password } = req.query;
+app.post("/signup", (req, res, next) => {
+  const { username, password } = req.body;
   addUser(username, password)
     .then(() => {
       req.session.user = username;
@@ -37,8 +38,8 @@ app.get("/signup", (req, res, next) => {
     });
 });
 
-app.get("/login", (req, res, next) => {
-  const { username, password } = req.query;
+app.post("/login", (req, res, next) => {
+  const { username, password } = req.body;
   verifyUser(username, password)
     .then(() => {
       req.session.user = username;
@@ -98,14 +99,14 @@ app.get("/todo/done", (req, res, next) => {
     .catch(next);
 });
 
-app.get("/todo/add", (req, res, next) => {
+app.post("/todo/add", (req, res, next) => {
   const user = req.session.user;
   if (!user) {
     debug("invalid access");
     res.status(401).end();
     return;
   }
-  const { content } = req.query;
+  const { content } = req.body;
   if (!content) {
     res.status(400).send("Can't add todo, you didn't provide its content");
     return;
