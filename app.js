@@ -13,6 +13,14 @@ app.disable("x-powered-by");
 
 app.use(morgan("dev"));
 
+app.set("trust proxy", 1);
+
+app.use((req, res, next) => {
+  const { ip, protocol } = req;
+  debug("req: %o", { ip, protocol });
+  next();
+});
+
 app.use((req, res, next) => {
   debug("Checking cross-site, Sec-Fetch-Site: %s", req.get("Sec-Fetch-Site"));
   if (req.get("Sec-Fetch-Site") === "cross-site") {
