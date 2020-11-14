@@ -25,7 +25,10 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const referer = req.get("referer");
   debug("Checking referer, referer: %s", referer);
-  if (referer && !(referer.includes("localhost") || referer.includes("xuchunyang"))) {
+  if (
+    referer &&
+    !(referer.includes("localhost") || referer.includes("xuchunyang"))
+  ) {
     res.status(400).send(`Ignore unknown referer request: ${referer}`);
     return;
   }
@@ -160,6 +163,17 @@ app.get("/", (req, res, next) => {
 app.use(express.static("public"));
 
 const port = 4777;
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/`);
+});
+
+process.on("SIGTERM", () => {
+  debug("SIGTERM signal received: closing HTTP server");
+  server.close(() => {
+    debug("HTTP server closed");
+    const DB = require("./db.js");
+    DB.db.close(() => {
+      debug("Database connection closed");
+    });
+  });
 });
