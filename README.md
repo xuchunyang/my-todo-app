@@ -20,6 +20,8 @@ https://todo.xuchunyang.me/
 - [ ] 网站更新后如何自动部署
 - [ ] 更新部署时如何不覆盖数据库
 - [ ] 如何备份数据库
+- [ ] 防止暴力破解密码 http://expressjs.com/en/advanced/best-practice-security.html#prevent-brute-force-attacks-against-authorization
+- [ ] Rate limit
 
 ## 使用容器部署
 
