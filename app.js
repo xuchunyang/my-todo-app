@@ -22,15 +22,6 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  debug("Checking cross-site, Sec-Fetch-Site: %s", req.get("Sec-Fetch-Site"));
-  if (req.get("Sec-Fetch-Site") === "cross-site") {
-    res.status(400).send("Ignore all cross site request");
-    return;
-  }
-  next();
-});
-
-app.use((req, res, next) => {
   if (req.path === "/") {
     debug("Don't check referer for /");
     next();
