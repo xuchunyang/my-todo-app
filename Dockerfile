@@ -9,12 +9,12 @@ RUN npm install --global pm2
 WORKDIR /app
 
 COPY package.json .
-
 RUN npm install
 
-COPY . .
-
+COPY createdb.sql .
 RUN sqlite3 my-todo-app.sqlite <createdb.sql
+
+COPY . .
 
 EXPOSE 4777
 
